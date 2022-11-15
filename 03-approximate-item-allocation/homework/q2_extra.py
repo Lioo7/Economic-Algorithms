@@ -112,15 +112,15 @@ def main():
     # Adams: f(s) = s (threshold = 3.25%)
     y = 0
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Adams (threshold = 3.25%):', seats_results)
+    print('Adams (threshold = 3.25%):\n', seats_results)
     # Webster: f(s) = s + 0.5 (threshold = 3.25%)
     y = 0.5
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Webster (threshold = 3.25%):', seats_results)
+    print('\nWebster (threshold = 3.25%):\n', seats_results)
     # Jefferson: f(s) = s + 1 (threshold = 3.25%)
     y = 1
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Jefferson (threshold = 3.25%):', seats_results)
+    print('\nJefferson (threshold = 3.25%):\n', seats_results)
 
     threshold = 0
     d_votes = get_dict_voters_with_election_threshold_filtering(
@@ -128,15 +128,15 @@ def main():
     # Adams: f(s) = s (threshold = 0%)
     y = 0
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Adams (threshold = 0%):', seats_results)
+    print('\nAdams (threshold = 0%):\n', seats_results)
     # Webster: f(s) = s + 0.5 (threshold = 0%)
     y = 0.5
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Webster (threshold = 0%):', seats_results)
+    print('\nWebster (threshold = 0%):\n', seats_results)
     # Jefferson: f(s) = s + 1 (threshold = 0%)
     y = 1
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Jefferson (threshold = 0%):', seats_results)
+    print('\nJefferson (threshold = 0%):\n', seats_results)
 
     # d_seats = get_dict_real_seats_with_election_threshold_filtering(election_results)
     # print(real results:', d_seats)
