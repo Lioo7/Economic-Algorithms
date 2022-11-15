@@ -106,13 +106,18 @@ def find_max_y(d_votes, real_results):
 
 def main():
     election_results = 'election_results.csv'
+
+    # Real results 
+    d_seats = get_dict_real_seats_with_election_threshold_filtering(election_results)
+    print('Real results:\n', d_seats)
+
     threshold = 3.25
     d_votes = get_dict_voters_with_election_threshold_filtering(
         election_results, threshold)
     # Adams: f(s) = s (threshold = 3.25%)
     y = 0
     seats_results = calculates_seats(d_votes, generic_function, y)
-    print('Adams (threshold = 3.25%):\n', seats_results)
+    print('\nAdams (threshold = 3.25%):\n', seats_results)
     # Webster: f(s) = s + 0.5 (threshold = 3.25%)
     y = 0.5
     seats_results = calculates_seats(d_votes, generic_function, y)
@@ -138,8 +143,6 @@ def main():
     seats_results = calculates_seats(d_votes, generic_function, y)
     print('\nJefferson (threshold = 0%):\n', seats_results)
 
-    # d_seats = get_dict_real_seats_with_election_threshold_filtering(election_results)
-    # print(real results:', d_seats)
     # y = find_max_y(d_votes, d_seats)
     # print(y)
 
