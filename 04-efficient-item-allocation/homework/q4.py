@@ -97,18 +97,26 @@ def simulation(iterations: int):
         items = items_generator(num_of_items)
         players = players_generator(num_of_players)
         
-        # runs the greedy algo
-        greedy_allocation(players, items)
-        greedy_value = get_max_list_value(players)
-
         # runs the optimal algo
         optimal_list = optimal_allocation(players, items)
         optimal_value = get_max_list_value(optimal_list)
 
+        # runs the greedy algo
+        greedy_allocation(players, items)
+        greedy_value = get_max_list_value(players)
+
         # calculates the approximation ratio
         approximation_ratio = greedy_value / optimal_value
+        print(f"players: {num_of_players}, items: {num_of_items}")
         print("approximation ratio: ", "%.2f" %approximation_ratio)
         
+        # print("optimal:")
+        # for a in range(num_of_players):
+        #     print(list(str(item) for item in optimal_list[a].items))
+        # print("greedy:")
+        # for a in range(num_of_players):
+        #     print(list(str(item) for item in players[a].items))
+
         # calculates the total ratio
         total_ratio += approximation_ratio
 
