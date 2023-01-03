@@ -90,8 +90,8 @@ def simulation(iterations: int):
     total_ratio = 0
     for t in range (1, iterations + 1):
         # generates random values in range 1-9
+        num_of_players = random.randint(1, 9) 
         num_of_items = random.randint(1, 9)
-        num_of_players = random.randint(1, 9)
         
         # genrates items and players
         items = items_generator(num_of_items)
