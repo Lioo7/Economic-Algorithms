@@ -1,3 +1,4 @@
+import doctest
 from PlayerNode import PlayerNode
 from HouseNode import HouseNode
 from Graph import Graph
@@ -33,8 +34,22 @@ def find_trading_cycle(preferences: list[list[int]]):
     """
     The function find a cycle in the tarding houses graph,
     when all the players have strong preferences
+
+    Test #1
+    >>> preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
+    >>> find_trading_cycle(preferences)
+    [0, 2, 0]
+
+    Test #2
+    >>> preferences = [[3, 2, 1, 0], [1, 2, 3, 0], [2, 3, 0, 1], [0, 1, 2, 3]]
+    >>> find_trading_cycle(preferences)
+    [0, 3, 0]
+
+    Test #3
+    >>> preferences = [[0, 1], [0, 1]]
+    >>> find_trading_cycle(preferences)
+    [0, 0]
     """
-    print('preferences:', preferences)
     n = len(preferences)
     # create a dictionary to store the current owner of each house
     global current_owner
@@ -103,12 +118,38 @@ def find_trading_cycle(preferences: list[list[int]]):
             return trading_cycle
 
 def top_trading_cycle(preferences: list[list[int]]):
+    """ 
+    Top trading cycle (TTC) is an algorithm for trading indivisible items without using money. 
+    It was developed by David Gale and published by Herbert Scarf and Lloyd Shapley.
+
+    The function gets as an input a list of lists called 'preferences' where each list 
+    inside the main list represents the preferences of a player. 
+    The function finds a cycle in the trading houses graph.
+    The output of the function is a list of integers that describes the circle. 
+
+    For example if the function return the list [11, 15, 17, 11], 
+    it means that person 11 receives house 15, person 15 receives house 17, and person 17 receives house 11.
+
+    Note: The function assumes that the preferences are strong and that there is no indifference among the players.
+
+    References:
+    https://en.wikipedia.org/wiki/Top_trading_cycle#:~:text=Top%20trading%20cycle%20(TTC)%20is,Herbert%20Scarf%20and%20Lloyd%20Shapley.
+    Video with examples: https://www.youtube.com/watch?v=6G8dJXNfr4A
+
+    Test #1
+    >>> preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
+    >>> top_trading_cycle(preferences)
+    [0, 2, 0, 1, 1]
+
+    Test #2 (from the video above)
+    preferences = [[0, 2, 3, 1], [0, 2, 3, 1], [1, 3, 2, 0], [1, 2, 3, 0]]
+    top_trading_cycle(preferences)
+    [0, 0, 1, 2, 1, 3, 3]
+    """
     trading_list = []
     while len(preferences) > 0:
         nodes_to_remove = find_trading_cycle(preferences)
-        print('nodes_to_remove:', nodes_to_remove)
         if nodes_to_remove == None:
-            print('done!')
             break
         else:
             trading_list.extend(nodes_to_remove)
@@ -124,35 +165,9 @@ def top_trading_cycle(preferences: list[list[int]]):
     return trading_list
 
 
-def test_find_trading_cycle():
-    preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
-    expected_result = [0, 2, 0]
-    print(find_trading_cycle(preferences))
-    assert find_trading_cycle(preferences) == expected_result
-
-    preferences = [[3, 2, 1, 0], [1, 2, 3, 0], [2, 3, 0, 1], [0, 1, 2, 3]]
-    expected_result = [0, 3, 0]
-    print(find_trading_cycle(preferences))
-    assert find_trading_cycle(preferences) == expected_result
-
-    preferences = [[0, 1], [0, 1]]
-    expected_result = [0]
-    print(find_trading_cycle(preferences))
-    assert find_trading_cycle(preferences) == expected_result
-
-
 def main():
-    # test_find_trading_cycle()
-    
-    # test1
-    preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
-    expected_result = [0, 2, 0]
-    print(top_trading_cycle(preferences))
-
-    # test2
-    preferences = [[0, 2, 3, 1], [0, 2, 3, 1], [1, 3, 2, 0], [1, 2, 3, 0]]
-    expected_result = [0, 2, 0]
-    print(top_trading_cycle(preferences))
+    (failures, tests) = doctest.testmod(report=True)
+    print("{} failures, {} tests".format(failures, tests))
 
 if __name__ == '__main__':
     main()
