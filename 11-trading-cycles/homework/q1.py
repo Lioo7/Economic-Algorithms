@@ -77,7 +77,7 @@ def build_graph_from_output(trading_list):
     nx.draw(G.G, with_labels=True)
     plt.savefig('img/output-graph')
 
-def find_trading_cycle(preferences: list[list[int]], iteration_number=None, print_graphs=False):
+def find_trading_cycle(preferences: list[list[int]], iteration_number=None, save_graphs=False):
     """
     A utility function that find a cycle in the tarding houses graph,
     when all the players have strong preferences.
@@ -107,7 +107,7 @@ def find_trading_cycle(preferences: list[list[int]], iteration_number=None, prin
     next_desired_house = {i: preferences[i][0] for i in range(n) if preferences[i]}
 
     # prints the grpahs if the option is activated
-    if print_graphs == True and iteration_number == 0:
+    if save_graphs == True and iteration_number == 0:
         build_graph_from_input(n, current_owner, next_desired_house)
 
     # create a set to store the visited players
@@ -167,7 +167,7 @@ def find_trading_cycle(preferences: list[list[int]], iteration_number=None, prin
             trading_cycle.append(desired_house)
             return trading_cycle
 
-def top_trading_cycle(preferences: list[list[int]], print_graphs=False):
+def top_trading_cycle(preferences: list[list[int]], save_graphs=False):
     """ 
     Top trading cycle (TTC) is an algorithm for trading indivisible items without using money. 
     It was developed by David Gale and published by Herbert Scarf and Lloyd Shapley.
@@ -204,7 +204,7 @@ def top_trading_cycle(preferences: list[list[int]], print_graphs=False):
     iteration_number = 0
     trading_list = []
     while len(preferences) > 0:
-        nodes_to_remove = find_trading_cycle(preferences, iteration_number, print_graphs)
+        nodes_to_remove = find_trading_cycle(preferences, iteration_number, save_graphs)
         iteration_number += 1
         if nodes_to_remove == None:
             break
@@ -219,7 +219,7 @@ def top_trading_cycle(preferences: list[list[int]], print_graphs=False):
         preferences = remove_houses(preferences, houses_to_remove)
 
     # prints the grpahs if the option is activated
-    if print_graphs == True:
+    if save_graphs == True:
         build_graph_from_output(trading_list)
 
     return trading_list
@@ -230,18 +230,18 @@ def main():
     print("{} failures, {} tests".format(failures, tests))
 
     # preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
-    # ans = top_trading_cycle(preferences, print_graphs=True)
+    # ans = top_trading_cycle(preferences, save_graphs=True)
     # print(ans)
     # # expected [0, 2, 0, 1, 1]
 
     # preferences = [[0, 2, 3, 1], [0, 2, 3, 1], [1, 3, 2, 0], [1, 2, 3, 0]]
-    # ans = top_trading_cycle(preferences, print_graphs=True)
+    # ans = top_trading_cycle(preferences, save_graphs=True)
     # print(ans)
     # # expected [0, 0, 1, 2, 1, 3, 3]
     # # [0:0, 1:2, 2:1, 3:3] p:h
 
     preferences = [[1, 2, 0], [2, 0, 1], [0, 1, 2]]
-    ans = top_trading_cycle(preferences, print_graphs=True)
+    ans = top_trading_cycle(preferences, save_graphs=True)
     print(ans)
     # expected [0,1,2,0]
 
