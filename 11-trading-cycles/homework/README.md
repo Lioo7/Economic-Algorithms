@@ -29,14 +29,19 @@ You can enable the visualization by setting the 'save_graphs' parameter to True.
 ## Example
 ### Input
 preferences = [[1, 2, 0], [2, 0, 1], [0, 1, 2]]
+<br>
 In this example, the player #0 has a preference for houses 1, 2, and 0 in that order. Similarly, player #1 has a preference for houses 2, 0, and 1, and player #3 has a preference for houses 0, 1, and 2.
+<br>
 Players are represented by positive nodes, while houses are represented by negative nodes.
+<br>
 If a house has an edge to a player, that means the player is the tenant.
+<br>
 If a player edges a house, that player wants to live there.
 <img src="https://i.ibb.co/84cq0Pb/input-graph.png" width="100%" />
 
 ### Output
 [0,1,2,0]
+<br>
 The output above means that after the trading, player #0 lives in house #1, player #1 lives in house #2 and player #2 lives in house #0.
 <img src="https://i.ibb.co/TrNwfV6/output-graph.png" width="100%" />
 
