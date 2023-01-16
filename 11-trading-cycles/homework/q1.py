@@ -5,7 +5,7 @@ from Graph import Graph
 
 def swap_houses(desired_house:int, current_player:int, current_house:int, tenant_in_desired_house:int):
     """
-    The function swap houses between two players
+    A utility function that swap houses between two players.
     """
     # update the owner of the desired house to be the current player
     current_owner[desired_house] = current_player
@@ -14,7 +14,7 @@ def swap_houses(desired_house:int, current_player:int, current_house:int, tenant
 
 def remove_players(preferences, players_to_remove):
     """
-    The function remove all the players from players_to_remove list from the preferences list
+    A utility function that remove all the players from players_to_remove list from the preferences list.
     """
     for i in sorted(players_to_remove, reverse=True):
         preferences[i] = []
@@ -22,7 +22,7 @@ def remove_players(preferences, players_to_remove):
 
 def remove_houses(preferences, houses_to_remove):
     """
-    The function remove all the houses from houses_to_remove list from the inner lists in the preferences list
+    A utility function that remove all the houses from houses_to_remove list from the inner lists in the preferences list.
     """
     for lst in preferences:
         for house in houses_to_remove:
@@ -30,10 +30,46 @@ def remove_houses(preferences, houses_to_remove):
                 lst.remove(house)
     return preferences
 
-def find_trading_cycle(preferences: list[list[int]]):
+def build_graph_from_input(n, current_owner, next_desired_house):
+    G = Graph()
+
+    # create nodes for each player and house
+    player_nodes = [PlayerNode(str(i)) for i in range(n)]
+    house_nodes = [HouseNode('-' + str(i)) for i in range(n)]
+
+    # iterates over current_owner dict and adds an edge from each key (house) to its value (player/tenant)
+    for key, value in current_owner.items():
+        G.add_tenant(house_nodes[key], player_nodes[value])
+
+    # iterates over next_desired_house dict and adds an edge from each key (player) to its value (desired house)
+    for key, value in next_desired_house.items():
+        G.add_desire_house(player_nodes[key], house_nodes[value])
+    
+    G.draw()
+
+def build_graph_from_output(trading_list):
+    G = Graph()
+
+    unique = set()
+    [unique.add(i) for i in trading_list]
+    n = len(unique)
+
+    # create nodes for each player and house
+    player_nodes = [PlayerNode(str(i)) for i in range(n)]
+    house_nodes = [HouseNode('-' + str(i)) for i in range(n)]
+
+    # iterates over trading_list and adds an edge from each player to its house
+    for i in range(len(trading_list)-1):
+        player_index = trading_list[i]
+        house_index = trading_list[i+1]
+        G.add_tenant(house_nodes[house_index], player_nodes[player_index])
+    
+    G.draw()
+
+def find_trading_cycle(preferences: list[list[int]], print_graphs=False):
     """
-    The function find a cycle in the tarding houses graph,
-    when all the players have strong preferences
+    A utility function that find a cycle in the tarding houses graph,
+    when all the players have strong preferences.
 
     Test #1
     >>> preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
@@ -59,6 +95,10 @@ def find_trading_cycle(preferences: list[list[int]]):
     # create a dictionary to store the next desired house of each player
     next_desired_house = {i: preferences[i][0] for i in range(n) if preferences[i]}
 
+    # prints the grpahs if the option is activated
+    if print_graphs == True:
+        build_graph_from_input(n, current_owner, next_desired_house)
+
     # create a set to store the visited players
     visited = set()
     # start the search from the first player (that is still in the game)
@@ -67,7 +107,6 @@ def find_trading_cycle(preferences: list[list[int]]):
         if preference:
             current_player = i
             break
-
 
     # create a list to store the trading cycle
     trading_cycle = []
@@ -117,7 +156,7 @@ def find_trading_cycle(preferences: list[list[int]]):
             trading_cycle.append(desired_house)
             return trading_cycle
 
-def top_trading_cycle(preferences: list[list[int]]):
+def top_trading_cycle(preferences: list[list[int]], print_graphs=False):
     """ 
     Top trading cycle (TTC) is an algorithm for trading indivisible items without using money. 
     It was developed by David Gale and published by Herbert Scarf and Lloyd Shapley.
@@ -142,19 +181,23 @@ def top_trading_cycle(preferences: list[list[int]]):
     [0, 2, 0, 1, 1]
 
     Test #2 (from the video above)
-    preferences = [[0, 2, 3, 1], [0, 2, 3, 1], [1, 3, 2, 0], [1, 2, 3, 0]]
-    top_trading_cycle(preferences)
+    >>> preferences = [[0, 2, 3, 1], [0, 2, 3, 1], [1, 3, 2, 0], [1, 2, 3, 0]]
+    >>> top_trading_cycle(preferences)
     [0, 0, 1, 2, 1, 3, 3]
+
+    Test #3
+    >>> preferences = [[1, 2, 0], [2, 0, 1], [0, 1, 2]]
+    >>> top_trading_cycle(preferences)
+    [0, 1, 2, 0]
     """
     trading_list = []
     while len(preferences) > 0:
-        nodes_to_remove = find_trading_cycle(preferences)
+        nodes_to_remove = find_trading_cycle(preferences, print_graphs)
         if nodes_to_remove == None:
             break
         else:
             trading_list.extend(nodes_to_remove)
             players_to_remove = nodes_to_remove[:-1]
-            # add all the values in a list at odd indexes
             houses_to_remove = nodes_to_remove[1:]
 
         # remove the players from the preferences
@@ -162,12 +205,32 @@ def top_trading_cycle(preferences: list[list[int]]):
         # remove the houses from the preferences
         preferences = remove_houses(preferences, houses_to_remove)
 
+    # prints the grpahs if the option is activated
+    if print_graphs == True:
+        build_graph_from_output(trading_list)
+
     return trading_list
 
 
 def main():
     (failures, tests) = doctest.testmod(report=True)
     print("{} failures, {} tests".format(failures, tests))
+
+    # preferences = [[2, 1, 0], [1, 0, 2], [0, 2, 1]]
+    # ans = top_trading_cycle(preferences, print_graphs=True)
+    # print(ans)
+    # # expected [0, 2, 0, 1, 1]
+
+    # preferences = [[0, 2, 3, 1], [0, 2, 3, 1], [1, 3, 2, 0], [1, 2, 3, 0]]
+    # ans = top_trading_cycle(preferences, print_graphs=True)
+    # print(ans)
+    # # expected [0, 0, 1, 2, 1, 3, 3]
+    # # [0:0, 1:2, 2:1, 3:3] p:h
+
+    # preferences = [[1, 2, 0], [2, 0, 1], [0, 1, 2]]
+    # ans = top_trading_cycle(preferences, print_graphs=True)
+    # print(ans)
+    # # expected [0,1,2,0]
 
 if __name__ == '__main__':
     main()

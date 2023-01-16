@@ -1,8 +1,9 @@
 class PlayerNode:
-    last_id = 0
-    def __init__(self):
-        self.id = PlayerNode.last_id + 1
-        PlayerNode.last_id = self.id
+    # last_id = 0
+    def __init__(self, id:str):
+        # self.id = PlayerNode.last_id + 1
+        # PlayerNode.last_id = self.id
+        self.id = id
         self.next = None
 
     def set_next(self, next_node):

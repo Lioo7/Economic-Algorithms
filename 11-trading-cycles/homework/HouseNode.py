@@ -1,8 +1,9 @@
 class HouseNode:
-    last_id = 0
-    def __init__(self):
-        self.id = HouseNode.last_id - 1
-        HouseNode.last_id = self.id
+    # last_id = 0
+    def __init__(self, id:str):
+        # self.id = HouseNode.last_id - 1
+        # HouseNode.last_id = self.id
+        self.id = id
         self.next = None
 
     def set_next(self, next_node):
