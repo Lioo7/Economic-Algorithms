@@ -1,7 +1,10 @@
 import doctest
+import matplotlib.pyplot as plt
+import networkx as nx
 from PlayerNode import PlayerNode
 from HouseNode import HouseNode
 from Graph import Graph
+
 
 def swap_houses(desired_house:int, current_player:int, current_house:int, tenant_in_desired_house:int):
     """
@@ -45,7 +48,12 @@ def build_graph_from_input(n, current_owner, next_desired_house):
     for key, value in next_desired_house.items():
         G.add_desire_house(player_nodes[key], house_nodes[value])
     
-    G.draw()
+    
+    plt.title('Input Graph')
+    plt.cla() # clear
+    nx.draw(G.G, with_labels=True)
+    plt.savefig('img/input-graph')
+    
 
 def build_graph_from_output(trading_list):
     G = Graph()
@@ -64,9 +72,12 @@ def build_graph_from_output(trading_list):
         house_index = trading_list[i+1]
         G.add_tenant(house_nodes[house_index], player_nodes[player_index])
     
-    G.draw()
+    plt.title('Output Graph')
+    plt.cla() # clear
+    nx.draw(G.G, with_labels=True)
+    plt.savefig('img/output-graph')
 
-def find_trading_cycle(preferences: list[list[int]], print_graphs=False):
+def find_trading_cycle(preferences: list[list[int]], iteration_number=None, print_graphs=False):
     """
     A utility function that find a cycle in the tarding houses graph,
     when all the players have strong preferences.
@@ -96,7 +107,7 @@ def find_trading_cycle(preferences: list[list[int]], print_graphs=False):
     next_desired_house = {i: preferences[i][0] for i in range(n) if preferences[i]}
 
     # prints the grpahs if the option is activated
-    if print_graphs == True:
+    if print_graphs == True and iteration_number == 0:
         build_graph_from_input(n, current_owner, next_desired_house)
 
     # create a set to store the visited players
@@ -190,9 +201,11 @@ def top_trading_cycle(preferences: list[list[int]], print_graphs=False):
     >>> top_trading_cycle(preferences)
     [0, 1, 2, 0]
     """
+    iteration_number = 0
     trading_list = []
     while len(preferences) > 0:
-        nodes_to_remove = find_trading_cycle(preferences, print_graphs)
+        nodes_to_remove = find_trading_cycle(preferences, iteration_number, print_graphs)
+        iteration_number += 1
         if nodes_to_remove == None:
             break
         else:
@@ -227,10 +240,10 @@ def main():
     # # expected [0, 0, 1, 2, 1, 3, 3]
     # # [0:0, 1:2, 2:1, 3:3] p:h
 
-    # preferences = [[1, 2, 0], [2, 0, 1], [0, 1, 2]]
-    # ans = top_trading_cycle(preferences, print_graphs=True)
-    # print(ans)
-    # # expected [0,1,2,0]
+    preferences = [[1, 2, 0], [2, 0, 1], [0, 1, 2]]
+    ans = top_trading_cycle(preferences, print_graphs=True)
+    print(ans)
+    # expected [0,1,2,0]
 
 if __name__ == '__main__':
     main()
